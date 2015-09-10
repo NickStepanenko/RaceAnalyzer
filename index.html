@@ -50,8 +50,67 @@
 
     <script>
         var raceData = raceInfo;
+
+        raceData.drivers.sort(function(a, b) {
+            if(parseInt(a.finishPosition) < parseInt(b.finishPosition)) {
+                return -1;
+            } else
+            if(parseInt(a.finishPosition) > parseInt(b.finishPosition)) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+
+        for(i=0; i<raceData.drivers.length; i++) {
+            var firstName = raceData.drivers[i].name.slice(0, raceData.drivers[i].name.indexOf(" "));
+            var lastName = raceData.drivers[i].name.slice(raceData.drivers[i].name.indexOf(" "));
+            raceData.drivers[i].name = firstName + (lastName.toUpperCase());
+        }
+
         (function ($) {$(document).ready(function() {
+
+            function formatTime (str, option) {
+                var milisec = Math.round((parseFloat("0" + str.slice(str.indexOf(".")))) * 1000) / 1000;
+
+                switch(milisec.toString().length) {
+                    case 3:
+                        var ms = milisec.toString().slice(2) + "00"; break;
+                    case 4:
+                        var ms = milisec.toString().slice(2) + "0"; break;
+                    default:
+                        var ms = milisec.toString().slice(2); break;
+                }
+
+                var sec = Math.floor(parseFloat(str));
+                var minutes = 0;
+                var hours = 0;
+
+                while(sec > 60) {
+                    sec -= 60;
+                    minutes++;
+
+                    if(minutes % 60 == 0) {
+                        hours++;
+                    }
+                }
+
+                hours = hours.toString();
+                minutes = minutes.toString();
+                sec = sec.toString();
+
+                if(minutes == 0) {
+                    return ("0:" + (sec < 10 ? "0" + sec : sec) + "," + ms);
+                } else
+                if(hours == 0) {
+                    return ((minutes < 10 && option == "overall"? "0" + minutes : minutes) + ":" + (sec < 10 ? "0" + sec : sec) + "," + ms);
+                } else {
+                    return (hours + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (sec < 10 ? "0" + sec : sec) + "," + ms);
+                }
+            }
+
             for(i=0; i<raceData.drivers.length; i++) {
+                var climb = parseInt(raceData.drivers[i].gridPosition) - parseInt(raceData.drivers[i].finishPosition);
                 var row =
                         "<tr>" +
                         "<td>" + raceData.drivers[i].finishPosition + "</td>" +
@@ -59,15 +118,14 @@
                         "<td>" + raceData.drivers[i].name + "</td>" +
                         "<td>" + raceData.drivers[i].teamName + "</td>" +
                         "<td>" + raceData.drivers[i].gridPosition + "</td>" +
-                        "<td>" + raceData.drivers[i].finishPosition + "</td>" +
+                        "<td>" + (climb > 0 ? "+" + climb : climb) + "</td>" +
                         "<td>" + raceData.drivers[i].completedLaps + "</td>" +
-                        "<td>" + raceData.drivers[i].finishTime + "</td>" +
-                        "<td>" + raceData.drivers[i].bestLapTime + "</td>" +
+                        "<td>" + formatTime(raceData.drivers[i].finishTime, "overall") + "</td>" +
+                        "<td>" + formatTime(raceData.drivers[i].bestLapTime, "single") + "</td>" +
                         "<td>" + raceData.drivers[i].numOfPitstops + "</td>" +
                         "<td>" + raceData.drivers[i].earnedPoints + "</td>" +
-                        "</tr>"
+                        "</tr>";
 
-                console.log(row);
                 $("#resultsTable tr:last").after(row);
             }
         });})(jQuery);
@@ -101,7 +159,15 @@
                         <tr>
                             <td>Pos</td>
                             <td>Num</td>
-                            <td>Driver Name</td>
+                            <td>Driver</td>
+                            <td>Team</td>
+                            <td>Grid</td>
+                            <td>Climb</td>
+                            <td>Laps</td>
+                            <td>Finish Time</td>
+                            <td>Best Lap</td>
+                            <td>Pits</td>
+                            <td>Points</td>
                         </tr>
                     </tbody>
                 </table>
