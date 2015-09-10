@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="src/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 70px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+        }
+        .thumbnail img {
+            width: 100%;
+        }
+        .ratings {
+            padding-right: 10px;
+            padding-left: 10px;
+            color: #d17581;
+        }
+        .thumbnail {
+            padding: 0;
+        }
+        .thumbnail .caption-full {
+            padding: 9px;
+            color: #333;
+        }
+        footer {
+            margin: 50px 0;
+        }
+        #editor {
+            /** Setting height is also important, otherwise editor wont showup**/
+            height: 300px;
+        }
+        .addedLine {
+            background: rgba(50, 255, 50, 0.3);
+        }
+        .defaultLine {
+            background: rgba(255, 255, 255, 0.0);
+        }
+        .deletedLine {
+            background: rgba(255, 50, 50, 0.3);
+        }
+        html {
+            overflow-y: scroll;
+        }
+    </style>
+
+    <script type="text/javascript" src="src/jquery/dist/jquery.js" charset="utf-8"></script>
+    <script type="text/javascript" src="src/bootstrap/dist/js/bootstrap.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="race.data" charset="utf-8"></script>
+
+    <script>
+        var raceData = raceInfo;
+        (function ($) {$(document).ready(function() {
+            for(i=0; i<raceData.drivers.length; i++) {
+                var row =
+                        "<tr>" +
+                        "<td>" + raceData.drivers[i].finishPosition + "</td>" +
+                        "<td>" + raceData.drivers[i].carNumber + "</td>" +
+                        "<td>" + raceData.drivers[i].name + "</td>" +
+                        "<td>" + raceData.drivers[i].teamName + "</td>" +
+                        "<td>" + raceData.drivers[i].gridPosition + "</td>" +
+                        "<td>" + raceData.drivers[i].finishPosition + "</td>" +
+                        "<td>" + raceData.drivers[i].completedLaps + "</td>" +
+                        "<td>" + raceData.drivers[i].finishTime + "</td>" +
+                        "<td>" + raceData.drivers[i].bestLapTime + "</td>" +
+                        "<td>" + raceData.drivers[i].numOfPitstops + "</td>" +
+                        "<td>" + raceData.drivers[i].earnedPoints + "</td>" +
+                        "</tr>"
+
+                console.log(row);
+                $("#resultsTable tr:last").after(row);
+            }
+        });})(jQuery);
+
+    </script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a id="header-name" class="navbar-brand"></a>
+            </div>
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <div id="content" class="container">
+        <div class="row">
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading">Panel heading</div>
+                <div class="panel-body">
+
+                </div>
+
+                <!-- Table -->
+                <table id="resultsTable" class="table">
+                    <tbody>
+                        <tr>
+                            <td>Pos</td>
+                            <td>Num</td>
+                            <td>Driver Name</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
