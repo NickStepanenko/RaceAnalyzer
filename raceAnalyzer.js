@@ -40,25 +40,29 @@ function lapsAnalyzer (str) {
         lap.num = currentData[0].slice(5, currentData[0].length-1);
         lap.estimatedTime = currentData[2].slice(4, currentData[2].length-1);
 
-        if(currentData.length == 5) {
-            lap.s1 = currentData[currentData.length-2].slice(4, currentData[currentData.length-2].length-1);
-        } else
-        if(currentData.length == 6) {
-            lap.s1 = currentData[currentData.length-3].slice(4, currentData[currentData.length-3].length-1);
-            lap.s2 = currentData[currentData.length-2].slice(4, currentData[currentData.length-2].length-1);
-        } else
-        if(currentData.length == 7) {
-            lap.s1 = currentData[currentData.length-4].slice(4, currentData[currentData.length-4].length-1);
-            lap.s2 = currentData[currentData.length-3].slice(4, currentData[currentData.length-3].length-1);
-            lap.s3 = currentData[currentData.length-2].slice(4, currentData[currentData.length-2].length-1);
+        for(j=0; j<currentData.length; j++) {
+            if(currentData[j].indexOf("s1") != -1) {
+                lap.s1 = currentData[j].slice(4, currentData[j].length-1);
+            }
+            if(currentData[j].indexOf("s2") != -1) {
+                lap.s2 = currentData[j].slice(4, currentData[j].length-1);
+            }
+            if(currentData[j].indexOf("s3") != -1) {
+                lap.s3 = currentData[j].slice(4, currentData[j].length-1);
+            }
+            if(currentData[j].indexOf("fuel") != -1) {
+                lap.fuel = currentData[j].slice(6, 11);
+            }
+            if(currentData[j].indexOf("pit") != -1) {
+                lap.pit = "1";
+            }
         }
 
-        lap.fuel =
-            currentData[currentData.length-1].slice(6, currentData[currentData.length-1].indexOf("\">"));
         lap.lapTime =
             currentData[currentData.length-1].slice(
                 currentData[currentData.length-1].indexOf(">")+1,
-                currentData[currentData.length-1].indexOf("<"));
+                currentData[currentData.length-1].indexOf("<")
+            );
 
         laps.push(lap);
         lap = {};
@@ -182,5 +186,3 @@ async.waterfall([
 ], function (err, driversData) {
     fs.writeFileSync("race.data", "var raceInfo = " + JSON.stringify(driversData, null, "\t"));
 });
-
-//console.log(raceInfo);

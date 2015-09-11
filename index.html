@@ -42,6 +42,7 @@
         html {
             overflow-y: scroll;
         }
+        #resultsTable #pos { text-align: right }
     </style>
 
     <script type="text/javascript" src="src/jquery/dist/jquery.js" charset="utf-8"></script>
@@ -51,35 +52,22 @@
     <script>
         var raceData = raceInfo;
 
-        raceData.drivers.sort(function(a, b) {
-            if(parseInt(a.finishPosition) < parseInt(b.finishPosition)) {
-                return -1;
-            } else
-            if(parseInt(a.finishPosition) > parseInt(b.finishPosition)) {
-                return 1;
-            } else {
-                return 0;
-            }
-        });
-
-        for(i=0; i<raceData.drivers.length; i++) {
-            var firstName = raceData.drivers[i].name.slice(0, raceData.drivers[i].name.indexOf(" "));
-            var lastName = raceData.drivers[i].name.slice(raceData.drivers[i].name.indexOf(" "));
-            raceData.drivers[i].name = firstName + (lastName.toUpperCase());
-        }
-
         (function ($) {$(document).ready(function() {
+            $("#serverName").text(raceData.serverName.toUpperCase());
+            $("#eventName").text(raceData.eventName.toUpperCase());
+            $("#trackName").text(raceData.trackName.toUpperCase());
 
             function formatTime (str, option) {
                 var milisec = Math.round((parseFloat("0" + str.slice(str.indexOf(".")))) * 1000) / 1000;
 
+                var ms = 0;
                 switch(milisec.toString().length) {
                     case 3:
-                        var ms = milisec.toString().slice(2) + "00"; break;
+                        ms = milisec.toString().slice(2) + "00"; break;
                     case 4:
-                        var ms = milisec.toString().slice(2) + "0"; break;
+                        ms = milisec.toString().slice(2) + "0"; break;
                     default:
-                        var ms = milisec.toString().slice(2); break;
+                        ms = milisec.toString().slice(2); break;
                 }
 
                 var sec = Math.floor(parseFloat(str));
@@ -109,21 +97,124 @@
                 }
             }
 
+            function editName (str) {
+                var firstName = str.slice(0, str.indexOf(" "));
+                var lastName = str.slice(str.indexOf(" "));
+
+                return (firstName + lastName.toUpperCase());
+            }
+
+            raceData.drivers.sort(function(a, b) {
+                if(parseInt(a.finishPosition) < parseInt(b.finishPosition)) {
+                    return -1;
+                } else
+                if(parseInt(a.finishPosition) > parseInt(b.finishPosition)) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            });
+
+            var headRow =
+                    "<tr>" +
+                    "<th style=\"text-align: right;\">Pos</th>" +
+                    "<th style=\"text-align: right;\">Num</th>" +
+                    "<th style=\"text-align: center;\">Driver Name</th>" +
+                    "<th style=\"text-align: center;\">Team</th>" +
+                    "<th style=\"text-align: center;\"></th>" +
+                    "<th style=\"text-align: right;\">Grid</th>" +
+                    "<th style=\"text-align: left;\">Climb</th>" +
+                    "<th style=\"text-align: left;\">Laps</th>" +
+                    "<th style=\"text-align: left;\">Finish Time</th>" +
+                    "<th style=\"text-align: left;\">Best Lap</th>" +
+                    "<th style=\"text-align: right;\">Points</th>" +
+                    "</tr>";
+
+            $("#resultsTable tr:last").after(headRow);
+
             for(i=0; i<raceData.drivers.length; i++) {
                 var climb = parseInt(raceData.drivers[i].gridPosition) - parseInt(raceData.drivers[i].finishPosition);
+                var climbStr = "";
+                if(climb > 0) {
+                    climbStr =
+                            "<td style=\"text-align: left;\">" +
+                            "<span class=\"glyphicon glyphicon-circle-arrow-up text-success\" aria-hidden=\"true\">" +
+                            "</span>" + "&nbsp" +
+                            "+" + climb +
+                            "</td>";
+                } else
+                if(climb < 0) {
+                    climbStr =
+                            "<td style=\"text-align: left;\">" +
+                            "<span class=\"glyphicon glyphicon-circle-arrow-down text-danger\" aria-hidden=\"true\">" +
+                            "</span>" + "&nbsp" +
+                            climb +
+                            "</td>";
+                } else {
+                    climbStr =
+                            "<td style=\"text-align: left;\">" +
+                            "<span class=\"glyphicon glyphicon-minus\" aria-hidden=\"true\">" +
+                            "</span>" + "&nbsp" +
+                            climb +
+                            "</td>";
+                }
+
+                var finishTime = "";
+                var finishGap = "";
+                if(raceData.drivers[i].finishTime == "Can not find content tag.") {
+                    finishTime = raceData.drivers[i].finishStatus;
+                } else
+                if (raceData.drivers[i].completedLaps == raceData.drivers[0].completedLaps && raceData.drivers[i].finishPosition != 1) {
+                    var gap = parseFloat(raceData.drivers[i].finishTime) - parseFloat(raceData.drivers[0].finishTime);
+                    finishGap =
+                            formatTime(gap.toString(), "overall");
+                    finishTime =
+                            formatTime(raceData.drivers[i].finishTime, "overall") + " (+" + finishGap + ")";
+                    console.log(finishTime)
+                } else
+                if(raceData.drivers[i].completedLaps < raceData.drivers[0].completedLaps) {
+                    var finishGap =
+                            "+" + (raceData.drivers[0].completedLaps - raceData.drivers[i].completedLaps) + " LAPS"
+                }
+
+
+                var teamCar = "";
+                switch (raceData.drivers[i].teamName) {
+                    case "Ferrari":
+                        teamCar = "<img src='src/images/cars_2015/ferrari.png' style='display: block;height: 100%; width: 100%;' />"; break;
+                    case "Force India Mercedes":
+                        teamCar = "<img src='src/images/cars_2015/forceindia.png' style='display: block;height: 100%; width: 100%' />"; break;
+                    case "Lotus Mercedes":
+                        teamCar = "<img src='src/images/cars_2015/lotus.png' style='display: block; height: 100%; width: 100%' />"; break;
+                    case "Marussia Ferrari":
+                        teamCar = "<img src='src/images/cars_2015/manor.png' style='display: block;height: 100%; width: 100%' />"; break;
+                    case "McLaren Honda":
+                        teamCar = "<img src='src/images/cars_2015/mclaren.png' style='display: block;height: 100%; width: 100%' />"; break;
+                    case "Mercedes":
+                        teamCar = "<img src='src/images/cars_2015/mercedes.png' style='display: block;height: 100%; width: 100%' />"; break;
+                    case "Red Bull Racing Renault":
+                        teamCar = "<img src='src/images/cars_2015/redbull.png' style='display: block;height: 100%; width: 100%' />"; break;
+                    case "Sauber Ferrari":
+                        teamCar = "<img src='src/images/cars_2015/sauber.png' style='display: block;height: 100%; width: 100%' />"; break;
+                    case "Toro Rosso Renault":
+                        teamCar = "<img src='src/images/cars_2015/tororosso.png' style='display: block;height: 100%; width: 100%' />"; break;
+                    case "Williams Mercedes":
+                        teamCar = "<img src='src/images/cars_2015/williams.png' style='display: block;height: 100%; width: 100%' />"; break;
+                }
+
                 var row =
                         "<tr>" +
-                        "<td>" + raceData.drivers[i].finishPosition + "</td>" +
-                        "<td>" + raceData.drivers[i].carNumber + "</td>" +
-                        "<td>" + raceData.drivers[i].name + "</td>" +
-                        "<td>" + raceData.drivers[i].teamName + "</td>" +
-                        "<td>" + raceData.drivers[i].gridPosition + "</td>" +
-                        "<td>" + (climb > 0 ? "+" + climb : climb) + "</td>" +
-                        "<td>" + raceData.drivers[i].completedLaps + "</td>" +
-                        "<td>" + formatTime(raceData.drivers[i].finishTime, "overall") + "</td>" +
-                        "<td>" + formatTime(raceData.drivers[i].bestLapTime, "single") + "</td>" +
-                        "<td>" + raceData.drivers[i].numOfPitstops + "</td>" +
-                        "<td>" + raceData.drivers[i].earnedPoints + "</td>" +
+                        "<td style=\"text-align: right;\">" + raceData.drivers[i].finishPosition + "</td>" +
+                        "<td style=\"text-align: right;\">" + raceData.drivers[i].carNumber + "</td>" +
+                        "<td style=\"text-align: left;\">" + editName(raceData.drivers[i].name) + "</td>" +
+                        "<td style=\"text-align: left;\">" + raceData.drivers[i].teamName + "</td>" +
+                        "<td height='40px'>" + teamCar + "</td>" +
+                        "<td style=\"text-align: right;\">" + raceData.drivers[i].gridPosition + "</td>" +
+                        climbStr +
+                        "<td style=\"text-align: left;\">" + raceData.drivers[i].completedLaps + "</td>" +
+                        "<td style=\"text-align: left;\">" + finishTime + "</td>" +
+                        "<td style=\"text-align: left;\">" + formatTime(raceData.drivers[i].bestLapTime, "single") + "</td>" +
+                        "<td style=\"text-align: right;\">" + raceData.drivers[i].earnedPoints + "</td>" +
                         "</tr>";
 
                 $("#resultsTable tr:last").after(row);
@@ -148,7 +239,11 @@
         <div class="row">
             <div class="panel panel-default">
                 <!-- Default panel contents -->
-                <div class="panel-heading">Panel heading</div>
+                <div class="panel-heading">
+                    <h3 id="serverName"></h3>
+                    <h1 id="eventName"></h1>
+                    <h3 id="trackName"></h3>
+                </div>
                 <div class="panel-body">
 
                 </div>
@@ -156,19 +251,18 @@
                 <!-- Table -->
                 <table id="resultsTable" class="table">
                     <tbody>
-                        <tr>
-                            <td>Pos</td>
-                            <td>Num</td>
-                            <td>Driver</td>
-                            <td>Team</td>
-                            <td>Grid</td>
-                            <td>Climb</td>
-                            <td>Laps</td>
-                            <td>Finish Time</td>
-                            <td>Best Lap</td>
-                            <td>Pits</td>
-                            <td>Points</td>
-                        </tr>
+                        <col id="pos" width="1%"/>
+                        <col id="num" width="1%"/>
+                        <col id="driver" width="15%"/>
+                        <col id="team" width="13%"/>
+                        <col id="car" width="7%"/>
+                        <col id="grid" width="1%"/>
+                        <col id="climb" width="3%"/>
+                        <col id="laps" width="1%"/>
+                        <col id="finishTime" width="10%"/>
+                        <col id="bestLap" width="3%"/>
+                        <col id="points" width="1%"/>
+                    <tr></tr>
                     </tbody>
                 </table>
             </div>
