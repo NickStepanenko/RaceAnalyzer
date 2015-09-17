@@ -3,6 +3,15 @@ var raceInfo = {
 		{
 			"lapByLap": [
 				{
+					"num": "1",
+					"estimatedTime": "190.8861",
+					"s1": "39.5055",
+					"s2": "23.7332",
+					"s3": "34.2435",
+					"fuel": "0.643",
+					"lapTime": "97.4823"
+				},
+				{
 					"num": "2",
 					"estimatedTime": "288.3683",
 					"s1": "30.5782",
@@ -265,6 +274,15 @@ var raceInfo = {
 		{
 			"lapByLap": [
 				{
+					"num": "1",
+					"estimatedTime": "190.8861",
+					"s1": "37.7618",
+					"s2": "25.1390",
+					"s3": "35.0569",
+					"fuel": "0.682",
+					"lapTime": "97.9577"
+				},
+				{
 					"num": "2",
 					"estimatedTime": "288.8438",
 					"s1": "31.4659",
@@ -503,7 +521,7 @@ var raceInfo = {
 					"s2": "23.4061",
 					"s3": "33.2478",
 					"fuel": "0.098",
-					"lapTime": "startLap=\"27"
+					"lapTime": "86.0623"
 				}
 			],
 			"name": "Konstantinos Manolis",
@@ -522,6 +540,15 @@ var raceInfo = {
 		},
 		{
 			"lapByLap": [
+				{
+					"num": "1",
+					"estimatedTime": "190.8861",
+					"s1": "40.8602",
+					"s2": "24.8151",
+					"s3": "35.0122",
+					"fuel": "0.690",
+					"lapTime": "100.6875"
+				},
 				{
 					"num": "2",
 					"estimatedTime": "291.5736",
@@ -679,7 +706,8 @@ var raceInfo = {
 					"s1": "30.6688",
 					"s2": "23.6824",
 					"s3": "35.6395",
-					"lapTime": "s3=\"35.6395"
+					"fuel": "0.294",
+					"lapTime": "89.9907"
 				}
 			],
 			"name": "Nikita Laptev",
@@ -699,6 +727,15 @@ var raceInfo = {
 		},
 		{
 			"lapByLap": [
+				{
+					"num": "1",
+					"estimatedTime": "190.8861",
+					"s1": "35.9726",
+					"s2": "23.7143",
+					"s3": "33.8285",
+					"fuel": "0.643",
+					"lapTime": "93.5154"
+				},
 				{
 					"num": "2",
 					"estimatedTime": "284.4015",
@@ -970,6 +1007,16 @@ var raceInfo = {
 		{
 			"lapByLap": [
 				{
+					"num": "1",
+					"estimatedTime": "190.8861",
+					"s1": "50.7462",
+					"s2": "24.8855",
+					"s3": "59.0529",
+					"fuel": "0.682",
+					"pit": "1",
+					"lapTime": "134.6846"
+				},
+				{
 					"num": "2",
 					"estimatedTime": "325.5707",
 					"s1": "34.9361",
@@ -1239,6 +1286,15 @@ var raceInfo = {
 		},
 		{
 			"lapByLap": [
+				{
+					"num": "1",
+					"estimatedTime": "190.8861",
+					"s1": "38.7320",
+					"s2": "23.9432",
+					"s3": "34.3270",
+					"fuel": "0.722",
+					"lapTime": "97.0022"
+				},
 				{
 					"num": "2",
 					"estimatedTime": "287.8883",
@@ -1510,6 +1566,15 @@ var raceInfo = {
 		{
 			"lapByLap": [
 				{
+					"num": "1",
+					"estimatedTime": "190.8861",
+					"s1": "38.0994",
+					"s2": "24.1841",
+					"s3": "33.8569",
+					"fuel": "0.651",
+					"lapTime": "96.1403"
+				},
+				{
 					"num": "2",
 					"estimatedTime": "287.0264",
 					"s1": "30.2463",
@@ -1780,6 +1845,15 @@ var raceInfo = {
 		{
 			"lapByLap": [
 				{
+					"num": "1",
+					"estimatedTime": "190.8861",
+					"s1": "38.4110",
+					"s2": "24.1067",
+					"s3": "34.3313",
+					"fuel": "0.769",
+					"lapTime": "96.8490"
+				},
+				{
 					"num": "2",
 					"estimatedTime": "287.7351",
 					"s1": "45.2296",
@@ -2049,6 +2123,15 @@ var raceInfo = {
 		{
 			"lapByLap": [
 				{
+					"num": "1",
+					"estimatedTime": "190.8861",
+					"s1": "41.1022",
+					"s2": "25.1529",
+					"s3": "35.6222",
+					"fuel": "0.718",
+					"lapTime": "101.8774"
+				},
+				{
 					"num": "2",
 					"estimatedTime": "292.7635",
 					"s1": "31.7933",
@@ -2311,6 +2394,15 @@ var raceInfo = {
 		{
 			"lapByLap": [
 				{
+					"num": "1",
+					"estimatedTime": "190.8861",
+					"s1": "39.2038",
+					"s2": "24.4384",
+					"s3": "34.8151",
+					"fuel": "0.714",
+					"lapTime": "98.4573"
+				},
+				{
 					"num": "2",
 					"estimatedTime": "289.3434",
 					"s1": "69.5438",
@@ -2563,6 +2655,15 @@ var raceInfo = {
 		},
 		{
 			"lapByLap": [
+				{
+					"num": "1",
+					"estimatedTime": "190.8861",
+					"s1": "40.3588",
+					"s2": "24.0028",
+					"s3": "35.0801",
+					"fuel": "0.690",
+					"lapTime": "99.4417"
+				},
 				{
 					"num": "2",
 					"estimatedTime": "290.3279",
@@ -2834,6 +2935,15 @@ var raceInfo = {
 		{
 			"lapByLap": [
 				{
+					"num": "1",
+					"estimatedTime": "190.8861",
+					"s1": "45.3208",
+					"s2": "24.7583",
+					"s3": "34.3347",
+					"fuel": "0.718",
+					"lapTime": "104.4138"
+				},
+				{
 					"num": "2",
 					"estimatedTime": "295.2999",
 					"s1": "34.0953",
@@ -3084,7 +3194,7 @@ var raceInfo = {
 					"s2": "23.3759",
 					"s3": "34.6249",
 					"fuel": "0.122",
-					"lapTime": "startLap=\"1"
+					"lapTime": "88.4352"
 				}
 			],
 			"name": "Roman Golikov",
@@ -3103,6 +3213,15 @@ var raceInfo = {
 		},
 		{
 			"lapByLap": [
+				{
+					"num": "1",
+					"estimatedTime": "190.8861",
+					"s1": "41.7701",
+					"s2": "25.6739",
+					"s3": "36.3439",
+					"fuel": "0.969",
+					"lapTime": "103.7880"
+				},
 				{
 					"num": "2",
 					"estimatedTime": "294.6741",
@@ -3359,6 +3478,15 @@ var raceInfo = {
 		{
 			"lapByLap": [
 				{
+					"num": "1",
+					"estimatedTime": "190.8861",
+					"s1": "41.0917",
+					"s2": "25.4582",
+					"s3": "35.4253",
+					"fuel": "0.714",
+					"lapTime": "101.9752"
+				},
+				{
 					"num": "2",
 					"estimatedTime": "292.8613",
 					"s1": "31.8023",
@@ -3438,7 +3566,7 @@ var raceInfo = {
 					"s2": "24.3627",
 					"s3": "34.9365",
 					"fuel": "0.537",
-					"lapTime": "startLap=\"1"
+					"lapTime": "91.8990"
 				}
 			],
 			"name": "Ruslan Muzafarov",
@@ -3458,6 +3586,15 @@ var raceInfo = {
 		},
 		{
 			"lapByLap": [
+				{
+					"num": "1",
+					"estimatedTime": "190.8861",
+					"s1": "47.8372",
+					"s2": "25.8539",
+					"s3": "36.6705",
+					"fuel": "0.678",
+					"lapTime": "110.3616"
+				},
 				{
 					"num": "2",
 					"estimatedTime": "301.2477",
@@ -3658,7 +3795,8 @@ var raceInfo = {
 					"s1": "32.4389",
 					"s2": "29.2493",
 					"s3": "38.0339",
-					"lapTime": "s3=\"38.0339"
+					"fuel": "0.184",
+					"lapTime": "99.7221"
 				}
 			],
 			"name": "Eugene Shatov",
@@ -3678,6 +3816,15 @@ var raceInfo = {
 		},
 		{
 			"lapByLap": [
+				{
+					"num": "1",
+					"estimatedTime": "190.8861",
+					"s1": "44.5200",
+					"s2": "28.0334",
+					"s3": "38.1812",
+					"fuel": "0.663",
+					"lapTime": "110.7346"
+				},
 				{
 					"num": "2",
 					"estimatedTime": "301.6206",
@@ -3928,6 +4075,15 @@ var raceInfo = {
 		},
 		{
 			"lapByLap": [
+				{
+					"num": "1",
+					"estimatedTime": "190.8861",
+					"s1": "42.1931",
+					"s2": "26.1843",
+					"s3": "35.9650",
+					"fuel": "0.839",
+					"lapTime": "104.3423"
+				},
 				{
 					"num": "2",
 					"estimatedTime": "295.2284",

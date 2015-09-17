@@ -57,12 +57,25 @@
             $("#serverName").text(raceData.serverName.toUpperCase());
             $("#eventName").text(raceData.eventName.toUpperCase());
             $("#trackName").text(raceData.trackName.toUpperCase());
+            $("#raceLaps").append("<span class=\"glyphicon glyphicon-repeat\"></span>&nbsp" + raceData.raceLaps + " LAPS");
+            $("#raceTime").append("<span class=\"glyphicon glyphicon-hourglass\"></span>&nbsp" + raceData.raceTime.toUpperCase());
+
+            var raceSetting;
+            if(raceData.setting == "Multiplayer") {
+                raceSetting = "<span class=\"glyphicon glyphicon-globe text-info\"></span>&nbsp" + raceData.setting
+            } else {
+                raceSetting = "<span class=\"glyphicon glyphicon-user text-primary\"></span>" + raceData.setting
+            }
+
+            $("#raceSetting").append(raceSetting);
 
             function formatTime (str, option) {
                 var milisec = Math.round((parseFloat("0" + str.slice(str.indexOf(".")))) * 1000) / 1000;
 
                 var ms = 0;
                 switch(milisec.toString().length) {
+                    case 1:
+                        ms = milisec.toString().slice(2) + "000"; break;
                     case 3:
                         ms = milisec.toString().slice(2) + "00"; break;
                     case 4:
@@ -88,6 +101,9 @@
                 minutes = minutes.toString();
                 sec = sec.toString();
 
+                if(minutes == 0 && option == "sector") {
+                    return ((sec < 10 ? "0" + sec : sec) + "," + ms);
+                } else
                 if(minutes == 0) {
                     return ("0:" + (sec < 10 ? "0" + sec : sec) + "," + ms);
                 } else
@@ -105,6 +121,24 @@
                 return (firstName + lastName.toUpperCase());
             }
 
+            function formatFuel (str) {
+                var value = Math.round(((parseFloat(str) * 100) / 0.75) * 100) / 100;
+                var kgs = "";
+
+                if(value.toString().indexOf(".") == -1) {
+                    kgs = value.toString() + ",00";
+                } else
+                if(value.toString().indexOf(".") != -1 &&
+                        value.toString().indexOf(".") == value.toString().length-2) {
+                    kgs = value.toString() + "0";
+
+                } else {
+                    kgs = value.toString().replace(".", ",");
+                }
+
+                return kgs;
+            }
+
             raceData.drivers.sort(function(a, b) {
                 if(parseInt(a.finishPosition) < parseInt(b.finishPosition)) {
                     return -1;
@@ -119,6 +153,7 @@
             var headRow =
                     "<tr>" +
                     "<th style=\"text-align: right;\"></th>" +
+                    "<th style=\"text-align: right;\"></th>" +
                     "<th style=\"text-align: right;\">Pos</th>" +
                     "<th style=\"text-align: right;\">Num</th>" +
                     "<th style=\"text-align: center;\">Driver Name</th>" +
@@ -132,7 +167,7 @@
                     "<th style=\"text-align: right;\">Points</th>" +
                     "</tr>";
 
-            $("#resultsTable tr:last").after(headRow);
+            $("#resultsTable").append(headRow);
 
             for(i=0; i<raceData.drivers.length; i++) {
                 var climb = parseInt(raceData.drivers[i].gridPosition) - parseInt(raceData.drivers[i].finishPosition);
@@ -207,35 +242,18 @@
                         teamCar = "<img src='src/images/cars_2015/williams.png' style='display: block;height: 100%; width: 100%' />"; break;
                 }
 
-
-                var driverInfoRow = "<tr>" +
-                        "<td id=\"driver" + i + "raceInfoSlider\" colspan='12'>" +
-                        "<table id=\"" + i + "driverLapByLapTable\" class=\"table\">" +
-                        "<tbody>" +
-                        "<tr></tr>" +
-                        "</tbody>" + "</table>" + "</td>" + "</tr>";
-
-                var driverLaps = [];
-
-                for(j=0; j<raceData.drivers[i].lapByLap.length; j++) {
-                    var oneLap;
-                    oneLap = "<tr class=\"" + (j % 2 == 0 ? "oddLine" : "evenLine") + "\">" +
-                            "<td style=\"text-align: right;\">" + raceData.drivers[i].lapByLap[j].num + "</td>" +
-                            "<td style=\"text-align: right;\">" + raceData.drivers[i].lapByLap[j].s1 + "</td>" +
-                            "<td style=\"text-align: left;\">" + raceData.drivers[i].lapByLap[j].s2 + "</td>" +
-                            "<td style=\"text-align: left;\">" + raceData.drivers[i].lapByLap[j].s3 + "</td>" +
-                            "<td style=\"text-align: left;\">" + raceData.drivers[i].lapByLap[j].fuel + "</td>" +
-                            "<td style=\"text-align: right;\">" + formatTime(raceData.drivers[i].lapByLap[j].lapTime, "single") + "</td>" +
-                            "</tr>";
-
-                    driverLaps.push(oneLap);
-                }
-
                 var row =
+                        //"<tr class=\"" + (i % 2 == 0 ? "oddLine" : "evenLine") + "\">" +
                         "<tr class=\"" + (i % 2 == 0 ? "oddLine" : "evenLine") + "\">" +
                         "<td id=\"" + i + "sliderButton\" style=\"text-align: right;\">" +
-                            "<span id=\"" + i + "driverSlider\" class=\"glyphicon glyphicon-chevron-down\" aria-hidden=\"true\">" +
-                            "</span>" +
+                        "<span id=\"" + i + "driverSlider\" class=\"glyphicon glyphicon-chevron-down\" aria-hidden=\"true\">" +
+                        "</span>" +
+                        "</td>" +
+                        "<td id=\"" + i + "playerType\" style=\"text-align: right;\">" +
+                        "<span class=\"" +
+                        (raceData.drivers[i].isPlayer == 1 ? "glyphicon glyphicon-user" : "glyphicon glyphicon-modal-window")
+                        + "\" aria-hidden=\"true\">" +
+                        "</span>" +
                         "</td>" +
                         "<td style=\"text-align: right;\">" + raceData.drivers[i].finishPosition + "</td>" +
                         "<td style=\"text-align: right;\">" + raceData.drivers[i].carNumber + "</td>" +
@@ -250,20 +268,81 @@
                         "<td style=\"text-align: right;\">" + raceData.drivers[i].earnedPoints + "</td>" +
                         "</tr>";
 
-                $("#resultsTable tr:last").after(row);
-                //$("#resultsTable tr:last").after(driverInfoRow);
+                var driverInfoRow = "<tr>" +
+                        "<td id=\"" + i + "driverRaceInfoSlider\" colspan='12'>" + "</td>" + "</tr>";
 
-                $("#driver" + i + "raceInfoSlider").hide();
+                var driverLapByLapTable = "<table id=\"" + i + "driverLapByLapTable\" class=\"table table-striped table-hover\">" + "<tbody>" +
+                        "<col id=\"lapNum\" width=\"1%\"/>" +
+                        "<col id=\"s1\" width=\"1%\"/>" +
+                        "<col id=\"s2\" width=\"1%\"/>" +
+                        "<col id=\"s3\" width=\"1%\"/>" +
+                        "<col id=\"fuel\" width=\"1%\"/>" +
+                        "<col id=\"lapTime\" width=\"1%\"/>" +
+                        "<tr>" +
+                        "<th>#</th>" +
+                        "<th>S1</th>" +
+                        "<th>S2</th>" +
+                        "<th>S3</th>" +
+                        "<th>Fuel</th>" +
+                        "<th>Lap Time</th>" +
+                        "<tr>";
+
+                for(j=0; j<raceData.drivers[i].lapByLap.length; j++) {
+                    var oneLap;
+
+                    oneLap = "<tr>" +
+                            "<td style=\"text-align: left;\">" + raceData.drivers[i].lapByLap[j].num + "</td>" +
+
+                            "<td style=\"text-align: left;\">" +
+                            (!raceData.drivers[i].lapByLap[j].s1 ?
+                                            "—" :
+                                            formatTime(raceData.drivers[i].lapByLap[j].s1, "sector")
+                            ) +
+                            "</td>" +
+                            "<td style=\"text-align: left;\">" +
+                            (!raceData.drivers[i].lapByLap[j].s2 ?
+                                            "—" :
+                                            formatTime(raceData.drivers[i].lapByLap[j].s2, "sector")
+                            ) +
+                            "</td>" +
+                            "<td style=\"text-align: left;\">" +
+                            (!raceData.drivers[i].lapByLap[j].s2 ?
+                                            "—" :
+                                            formatTime(raceData.drivers[i].lapByLap[j].s2, "sector")
+                            ) +
+                            "</td>" +
+                            "<td style=\"text-align: left;\">" + formatFuel(raceData.drivers[i].lapByLap[j].fuel) + "</td>" +
+                            "<td style=\"text-align: left;\">" +
+                            (raceData.drivers[i].lapByLap[j].lapTime == "--.----" ?
+                                    "-:--,---" :
+                                    formatTime(raceData.drivers[i].lapByLap[j].lapTime, "single")
+                            ) +
+                            "</td>" +
+                            "</tr>";
+
+                    driverLapByLapTable += oneLap;
+                }
+
+                driverLapByLapTable += "</tbody>" + "</table>";
+
+                $("#resultsTable").append(row);
+                $("#resultsTable").append(driverInfoRow);
+                $("#" + i + "driverRaceInfoSlider").append(driverLapByLapTable);
+
+                $("#" + i + "driverLapByLapTable").hide();
+                $("#" + i + "driverRaceInfoSlider").hide();
 
                 $("#" + i + "sliderButton").click(function() {
                     var element = $(this).attr("id");
                     var elementID = element.slice(0, element.indexOf("sliderButton"));
-                    var isHidden = $("#driver" + elementID + "raceInfoSlider").is(":hidden");
+                    var isHidden = $("#" + elementID + "driverLapByLapTable").is(":hidden");
 
                     if(isHidden) {
-                        $("#driver" + elementID + "raceInfoSlider").slideDown();
+                        $("#" + elementID + "driverRaceInfoSlider").show();
+                        $("#" + elementID + "driverLapByLapTable").show();
                     } else {
-                        $("#driver" + elementID + "raceInfoSlider").slideUp();
+                        $("#" + elementID + "driverRaceInfoSlider").hide();
+                        $("#" + elementID + "driverLapByLapTable").hide();
                     }
                 });
             }
@@ -272,48 +351,58 @@
     </script>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-        <div class="container">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <a id="header-name" class="navbar-brand"></a>
-            </div>
-        </div>
-        <!-- /.container -->
-    </nav>
-
     <div id="content" class="container">
         <div class="row">
             <div class="panel panel-default">
                 <!-- Default panel contents -->
                 <div class="panel-heading">
-                    <span id="serverName"></span>
-                    <span id="eventName"></span><span id="trackName"></span>
+                    <table style="background-color: transparent">
+                        <tr>
+                            <td id="raceSetting" colspan="2" style="font-size: 12pt; vertical-align: bottom;"></td>
+                        </tr>
+                        <tr>
+                            <td id="serverName" colspan="2" style="font-size: 14pt; vertical-align: bottom;"></td>
+                        </tr>
+                        <tr>
+                            <td id="eventName" style="font-size: 24pt; vertical-align: baseline;"></td>
+                            <td id="trackName" style="font-size: 14pt; vertical-align: baseline; padding-left: 5px"></td>
+                        </tr>
+                    </table>
                 </div>
                 <div class="panel-body">
-
+                    <table class="table" style="background-color: transparent; border-style: hidden">
+                        <tr>
+                            <td id="raceLaps"></td>
+                            <td id="raceTime"></span></td>
+                            <td id="classes"><span class="glyphicon glyphicon-th-list"></span></td>
+                            <td id="fuelMult"><span class="glyphicon glyphicon-repeat"></span></td>
+                            <td id="tireMult"><span class="glyphicon glyphicon-time"></span></td>
+                            <td id="raceStatus"></td>
+                        </tr>
+                    </table>
                 </div>
-
-                <!-- Table -->
-                <table id="resultsTable" class="table">
-                    <tbody>
-                        <col id="sliderIcon" width="1%"/>
-                        <col id="pos" width="1%"/>
-                        <col id="num" width="1%"/>
-                        <col id="driver" width="13%"/>
-                        <col id="team" width="13%"/>
-                        <col id="car" width="7%"/>
-                        <col id="grid" width="1%"/>
-                        <col id="climb" width="3%"/>
-                        <col id="laps" width="1%"/>
-                        <col id="finishTime" width="10%"/>
-                        <col id="bestLap" width="3%"/>
-                        <col id="points" width="1%"/>
-                    <tr></tr>
-                    </tbody>
-                </table>
             </div>
+        </div>
+
+        <div class="row">
+            <!-- Table -->
+            <table id="resultsTable" class="table table-striped table-hover">
+                <tbody>
+                    <col id="sliderIcon" width="1%"/>
+                    <col id="type" width="1%"/>
+                    <col id="pos" width="1%"/>
+                    <col id="num" width="1%"/>
+                    <col id="driver" width="12%"/>
+                    <col id="team" width="11%"/>
+                    <col id="car" width="7%"/>
+                    <col id="grid" width="1%"/>
+                    <col id="climb" width="2%"/>
+                    <col id="laps" width="1%"/>
+                    <col id="finishTime" width="10%"/>
+                    <col id="bestLap" width="3%"/>
+                    <col id="points" width="1%"/>
+                </tbody>
+            </table>
         </div>
     </div>
 </body>

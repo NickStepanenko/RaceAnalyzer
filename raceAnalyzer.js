@@ -29,15 +29,14 @@ function lapsAnalyzer (str) {
     var lap = {};
     var laps = [];
 
-    var data = str.split("<Lap ").slice(2);
+    var data = str.split("<Lap ").slice(1);
+    data[data.length-1] = data[data.length-1].slice(0, data[data.length-1].indexOf("</Lap>")+6);
 
     for(i=0; i<data.length; i++) {
         var currentData = data[i].split(" ");
-        if(i == data.length-1) {
-            currentData = currentData.slice(0, currentData.length-3);
-        }
 
         lap.num = currentData[0].slice(5, currentData[0].length-1);
+        //console.log(currentData[2].slice(4, currentData[2].length-1));
         lap.estimatedTime = currentData[2].slice(4, currentData[2].length-1);
 
         for(j=0; j<currentData.length; j++) {
@@ -178,6 +177,9 @@ async.waterfall([
     },
     function getLapByLapData(driversData, callback) {
         for(k=1; k<entryList.length; k++) {
+            if(driversData.drivers[k-1].name == "Konstantinos Manolis") {
+                var flag = "here";
+            }
             driversData.drivers[k-1].lapByLap = lapsAnalyzer(entryList[k]);
         }
 
